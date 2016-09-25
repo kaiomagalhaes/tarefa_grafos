@@ -83,6 +83,37 @@ class GrafoTest < Minitest::Test
     [1, 0, 1, 1]
   ]
 
+  # 7 - Suponha que o grafo G é uma arvore, calcule o centro de G;
+
+  MATRIX_GRAPH =
+  [
+      [0, 1, 0, 0, 0, 0, 0],
+      [1, 0, 1, 0, 0, 0, 0],
+      [0, 1, 0, 1, 0, 0, 0],
+      [0, 0, 1, 0, 1, 1, 0],
+      [0, 0, 0, 1, 0, 0, 0],
+      [0, 0, 0, 1, 0, 0, 1],
+      [0, 0, 0, 0, 0, 1, 0],
+  ]
+
+  #
+  #     4
+  #   / | \
+  #  3  6  5
+  #  |  |
+  #  2  7
+  #  |
+  #  1
+  #
+  # Centro = [3-4]
+
+  def test_graph_center
+    result = Grafo.new(MATRIX_GRAPH).calculate_center
+    expected = [3, 4]
+
+    assert_equal(expected, result)
+  end
+
   def test_cicle
     assert_equal ["ciclo"], Grafo.new(MATRIX_CICLE).graph_class
   end
