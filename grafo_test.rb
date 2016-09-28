@@ -114,6 +114,126 @@ class GrafoTest < Minitest::Test
     assert_equal(expected, result)
   end
 
+  # 8 - Determinar se o grafo digitado pertence a classe dos grafos bipartidos * (desafio, no obrigatrio);
+
+  #  0 - 1
+  #  \  /
+  #   \/
+  #   /\
+  #  /  \
+  # 2 - 3
+  #  \
+  #   \
+  #    \
+  # 5 - 4
+  #
+  # É bipartido? Sim.
+
+  MATRIX_BIPARTITE_TRUE =
+  [
+      [0, 1, 0, 1, 0, 0],
+      [1, 0, 1, 0, 0, 0],
+      [0, 1, 0, 1, 1, 0],
+      [1, 0, 1, 0, 0, 0],
+      [0, 0, 1, 0, 0, 1],
+      [0, 0, 0, 0, 1, 0]
+  ]
+
+  #  1 - 2
+  #  \  /
+  #   \/
+  #   /\
+  #  /  \
+  # 3 - 4
+  # |\
+  # | \
+  # |  \
+  # 5 - 6
+  #
+  # É bipartido? Não.
+
+  MATRIX_BIPARTITE_FALSE =
+      [
+          [0, 1, 0, 1, 0, 0],
+          [1, 0, 1, 0, 0, 0],
+          [0, 1, 0, 1, 1, 1],
+          [1, 0, 1, 0, 0, 0],
+          [0, 0, 1, 0, 0, 1],
+          [0, 0, 1, 0, 1, 0]
+      ]
+
+  def test_graph_is_bipartite
+    result = Grafo.new(MATRIX_BIPARTITE_TRUE).bipartite?
+    expected = [true, [ [0, 2, 5], [1, 3, 4] ]]
+
+    assert_equal(expected, result)
+
+    result = Grafo.new(MATRIX_BIPARTITE_FALSE).bipartite?
+    expected = [false, nil]
+
+    assert_equal(expected, result)
+  end
+
+  # 9 - Determinar se o grafo digitado pertence a classe das arvores * (desafio, no obrigatrio);
+
+  # 1  2   3
+  # \  |  /
+  #  \ | /
+  #   \|/
+  #    4
+  #     \
+  #     5
+  #    /
+  #   6
+  #
+  # É uma árvore? Sim.
+
+  MATRIX_TREE_TRUE =
+  [
+      [0, 0, 0, 1, 0, 0],
+      [0, 0, 0, 1, 0, 0],
+      [0, 0, 0, 1, 0, 0],
+      [1, 1, 1, 0, 1, 0],
+      [0, 0, 0, 1, 0, 1],
+      [0, 0, 0, 0, 1, 0],
+  ]
+
+  # 1  2   3
+  # \  |  /
+  #  \ | /
+  #   \|/
+  #    4
+  #   / \
+  #  5 - 6
+  #  |    \
+  #  7     8
+  #
+  # É uma árvore? Não.
+
+  MATRIX_TRUE_FALSE =
+      [
+          [0, 0, 0, 1, 0, 0, 0, 0],
+          [0, 0, 0, 1, 0, 0, 0, 0],
+          [0, 0, 0, 1, 0, 0, 0, 0],
+          [1, 1, 1, 0, 1, 1, 0, 0],
+          [0, 0, 0, 1, 0, 1, 1, 0],
+          [0, 0, 0, 1, 1, 0, 0, 1],
+          [0, 0, 0, 0, 1, 0, 0, 0],
+          [0, 0, 0, 0, 0, 1, 0, 0]
+      ]
+
+  def test_graph_is_tree
+    result = Grafo.new(MATRIX_TREE_TRUE).tree?
+    expected = true
+
+    assert_equal(expected, result)
+
+    result = Grafo.new(MATRIX_TRUE_FALSE).tree?
+    expected = false
+
+    assert_equal(expected, result)
+  end
+
   def test_cicle
     assert_equal ["ciclo"], Grafo.new(MATRIX_CICLE).graph_class
   end
