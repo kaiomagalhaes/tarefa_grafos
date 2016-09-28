@@ -41,10 +41,12 @@ class Grafo
     (@matrix.min - [0]).empty?
   end
 
-  def graph_class
+  def graph_class(k = nil)
     classes = []
     classes << 'complete' if complete?
     classes << 'ciclo' if cicle?
+    classes << 'caminho' if path?
+    classes << 'k-regular' if regular(k)
     classes
   end
 
@@ -95,6 +97,53 @@ class Grafo
       cicle = true if @matrix[index][index] != 0
     end
     cicle
+  end
+  
+  def path?
+    path = true
+    number_leaves = 0
+
+    for node in (0..@matrix.count - 1) do
+      actual_vertex = @matrix[node]
+      edge_number = 0
+      for column in (0..actual_vertex .count - 1)
+        if(actual_vertex [column] == 1 )
+          edge_number += 1
+        end
+      end
+
+      if (edge_number == 1)
+        number_leaves += 1
+      end
+
+      if (edge_number > 2)
+        path = false
+        break
+      end
+    end
+    if (number_leaves != 2)
+      path = false
+    end
+    path
+  end
+
+  def regular(k)
+    regular = true
+    for node in (0..@matrix.count - 1) do
+      actual_vertex = @matrix[node]
+      edge_number = 0
+      for column in (0..actual_vertex .count - 1)
+        if(actual_vertex [column] == 1 )
+          edge_number += 1
+        end
+      end
+
+      if (edge_number != k)
+        regular = false
+        break
+      end
+    end
+    regular
   end
 
   def column(v)

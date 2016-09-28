@@ -82,6 +82,22 @@ class GrafoTest < Minitest::Test
     [1, 1, 0, 1],
     [1, 0, 1, 1]
   ]
+  
+  MATRIX_PATH =[
+      [0, 1, 0, 0],
+      [1, 0, 1, 0],
+      [0, 1, 0, 1],
+      [0, 0, 1, 0]
+  ]
+
+  MATRIX_REGULAR =[
+      [0, 1, 1, 0, 0, 1],
+      [1, 0, 1, 1, 0, 0],
+      [1, 1, 0, 0, 1, 0],
+      [0, 1, 0, 0, 1, 1],
+      [0, 0, 1, 1, 0, 1],
+      [1, 0, 0, 1, 1, 0]
+  ]
 
   # 7 - Suponha que o grafo G é uma arvore, calcule o centro de G;
 
@@ -236,6 +252,14 @@ class GrafoTest < Minitest::Test
 
   def test_cicle
     assert_equal ["ciclo"], Grafo.new(MATRIX_CICLE).graph_class
+  end
+  
+  def test_path
+    assert_equal ["caminho"], Grafo.new(MATRIX_PATH).graph_class
+  end
+
+  def test_regular
+    assert_equal ["k-regular"], Grafo.new(MATRIX_REGULAR).graph_class(3)
   end
 
   def test_all_classess
