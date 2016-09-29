@@ -52,35 +52,35 @@ class Grafo
 
   def calculate_center
 
-    # Enquanto houver mais de 2 vértices, teremos folhas para serem removidas
+    # While there is more than 2 vertices, there still will be leafs to be removed.
     while (amount_of_vertices_with_edges() > 2) do
       remove_wave_of_leafs
     end
 
-    list_of_vertices_with_edges
+    list_vertices_with_edges
 
   end
 
   def bipartite?
 
-    posicao_inicial = 0
-    lista_analisados = []
-    grupo_atual = 0 # O zero representa o grupo A e o um representa o grupo B
-    lista_de_grupos = [ [], [] ] # Tanto o grupo A quanto o grupo B estão vazios
+    initial_position = 0
+    list_analyzed_vertices = []
+    current_group = 0 # Zero represents group A, and one represents group B
+    list_of_groups = [ [], [] ] # Both groups A and B starts empty
 
-    retorno = check_vertice_group(posicao_inicial, lista_analisados, grupo_atual, lista_de_grupos)
+    check_vertice_group(initial_position, list_analyzed_vertices, current_group, list_of_groups)
 
   end
 
-  # Um grafo que é uma árvore não pode apresentar um ciclo de 3 ou mais vértices
-  # Para provarmos isso, removemos todas as suas folhas, pois os vértices em um ciclo nunca serão folhas
-  # Daí ao removermos todas as folhas, verificamos os vértices restantes e constatamos se o que temos é um ciclo, um aresta com dois vértices ou apenas um vértice
+  # A graph is a tree which can't have a cycle with 3 or more vertices
+  # To prove that, we will remove all the leafs, because the vertices in a cycle are never leafs
+  # So when we remove all the leafs, we count the remaining vertices and verify if we have a cycle, an edge with two vertices or just one vertex
   def tree?
-    while (list_of_leafs.count > 0)
+    while (list_leafs.count > 0)
       remove_wave_of_leafs
     end
 
-    list_of_vertices_with_edges.count <= 2
+    list_vertices_with_edges.count <= 2
   end
 
   private
@@ -98,7 +98,7 @@ class Grafo
     end
     cicle
   end
-  
+
   def path?
     path = true
     number_leaves = 0
@@ -157,135 +157,138 @@ class Grafo
   end
 
   def remove_wave_of_leafs
-    vetor_folhas = list_of_leafs
+    list_of_leafs = list_leafs
 
-    # Para cada vértice com somente uma aresta, iremos remover na matriz a ligação entre eles, pois a matriz representa tanto "a - b" como "b - a"
-    vetor_folhas.each do |vertice|
+    # For each vertex with just one edge, we will remove in the matrix the link between the two vertices
+    # That's because the matrix stores both the "a - b" and the "b - a" links
+    list_of_leafs.each do |vertex|
 
-      # Removemos a ligação do vértice folha com o resto da árvore na matriz, também conhecida como a "ida" da aresta
-      for coluna in (0..@matrix[vertice].count - 1)
-        @matrix[vertice][coluna] = 0
+      # We remove the link from the leaf to the rest of the tree, also known as "a - b" link
+      for column in (0..@matrix[vertex].count - 1)
+        @matrix[vertex][column] = 0
       end
 
-      # Removemos a ligação do vizinho do vértice folha com a própria folha na matriz, também conhecida como a "volta" da aresta
-      for linha in (0..@matrix.count - 1)
-        @matrix[linha][vertice] = 0
+      # We remove the link from the neighbour of the leaf to the leaf itself, also known as "b - a" link
+      for line in (0..@matrix.count - 1)
+        @matrix[line][vertex] = 0
       end
 
     end
   end
 
-  # Método para retornar a quantidade de vértices do grafo que apresentam alguma aresta incidente
+  # Method to return the count of vertices of the graph that have at least one edge linking on them
   def amount_of_vertices_with_edges
 
-    # O número de vértices é igual a quantidade de linhas onde ao somar todas as arestas incidentes o resultado é maior que zero
-    quantidade_de_vertices = (@matrix.find_all {|linha| linha.inject(0){|sum, x| sum + x } > 0}).count
+    # The number of vertices it's equal to the number of lines where their inner sum is greater than zero
+    number_of_vertices = (@matrix.find_all {|line| line.inject(0){|sum, x| sum + x } > 0}).count
 
   end
 
-  def list_of_leafs
-    vetor_folhas = []
+  def list_leafs
+    list_of_leafs = []
 
-    for linha in (0..@matrix.count - 1) do # Iremos verificar a quantidade de arestas em cada linha da matriz
-      vertice_atual = @matrix[linha]
-      quantidade_arestas_no_vertice = 0
+    for line in (0..@matrix.count - 1) do # We will count the number of edges in each line of the matrix
+      current_vertex = @matrix[line]
+      number_of_edges_on_vertex = 0
 
-      for coluna in (0..vertice_atual.count - 1) # Cada coluna na matriz que apresentar um número, é a quantidade de arestas daquele vértice no grafo
-        if (vertice_atual[coluna] == 1)
-          quantidade_arestas_no_vertice += 1
+      for column in (0..current_vertex.count - 1) # For each column in the matrix that contains a number, the number is equal to the number of edges linking in that vertex
+        if (current_vertex[column] == 1)
+          number_of_edges_on_vertex += 1
         end
       end
 
-      # Iremos retornar os vértices que apresentam somente uma aresta
-      if (quantidade_arestas_no_vertice == 1)
-        vetor_folhas << linha
+      # We will later return the vertices that has at least one edge
+      if (number_of_edges_on_vertex == 1)
+        list_of_leafs << line
       end
 
     end
 
-    vetor_folhas
+    list_of_leafs
 
   end
 
-  # Método para retornar uma lista com os vértices do grafo que apresentam alguma aresta incidente
-  def list_of_vertices_with_edges
-    retorno = []
+  # Method to return a list with all the vertices of the graph that has at least one edge linking on them
+  def list_vertices_with_edges
+    result = []
 
-    # Encontramos todos as linhas que apresentam pelo menos uma aresta
-    linhas_com_aresta = @matrix.find_all {|linha| linha.include? 1}
+    # We search for all the lines that has at least one edge
+    lines_with_edge = @matrix.find_all {|line| line.include? 1}
 
-    # Como o menor valor da matriz é 0 e o menor valor do grafo é 1, somamos um para ficar com o número correto
-    linhas_com_aresta.each do |linha|
-      retorno << (@matrix.find_index(linha) + 1)
+    # Because the smallest possible number in the matrix is zero but the smallest possible number in the graph is one,
+    # we add one to all elements so the result is correct
+    lines_with_edge.each do |line|
+      result << (@matrix.find_index(line) + 1)
     end
 
-    retorno
+    result
   end
 
-  # O método funciona da seguinte maneira
-  # Primeiro, ele irá selecionar um vértice, e inserir o mesmo em um grupo, caso ainda não tenha sido inserido
-  # Segundo, ele irá certificar que os vizinhos estão em grupos opostos das arestas, retornando falso caso encontre um que fuja a regra, e
-  # assinalando grupos para os vizinhos que ainda não o possuem
-  # Terceiro, ao fim da análise, ele irá executar a mesma análise aos vizinhos que ainda não foram analisados
-  def check_vertice_group(position, lista_analisados, numero_grupo_atual, lista_grupos)
-    eh_grupo = true # Enquanto uma contra-prova não for encontrada, acredita-se que o grafo é bipartido
-    vertice = @matrix[position]
+  # The method works as follows
+  # First, it will select a vertex, and insert it in a group if its not already in one
+  # Second, it will assure that all its neighbours are in an opposite group, return false if it founds a vertex that breaks this law,
+  # and marking groups for the neighbours that doesn't have it
+  # Third, at the end of the check, it will execute the same check in the neighbours vertices that weren't checked before
+  def check_vertice_group(vertex_position, list_vertices_checked, number_current_group, list_of_groups)
+    is_group = true # While we don't find a counter-proof, we cannot say that its not a bipartide
+    vertex = @matrix[vertex_position]
 
-    # Após esse vértice ter sido analisado, iremos tratar os vértices vizinhos que ainda não foram analisados
-    lista_vizinhos_nao_analisados = []
+    # After we check this vertex, we will check the neighbour vertices that weren't checked before
+    list_of_neighbours_not_checked = []
 
-    # Se esse vértice ainda não foi assinalado um grupo, iremos assinalar a ele agora
-    if(!lista_grupos[numero_grupo_atual].include? position)
-      lista_grupos[numero_grupo_atual] << position
+    # If this vertex wasn't marked for a group, we will mark it now
+    if(!list_of_groups[number_current_group].include? vertex_position)
+      list_of_groups[number_current_group] << vertex_position
     end
 
-    # Vamos assinalar um grupo para cada vértice vizinho e anotar os que não foram analisados
-    for i in (0..vertice.count - 1)
-      if(vertice[i] == 1)
+    # We will mark every neighbour vertex for a group and store those which weren't checked
+    for i in (0..vertex.count - 1)
+      if(vertex[i] == 1)
 
-        # Se o vértice vizinho for do mesmo grupo que o atual, significa que é uma aresta entre o mesmo grupo, logo não é um bipartido
-        if(lista_grupos[numero_grupo_atual].include? i)
+        # If the neighbour vertex is from the same group of the current vertex, it means that we have an edge inside the same group
+        # Meaning that this is not a bipartide graph
+        if(list_of_groups[number_current_group].include? i)
           return [false, nil]
-        elsif (!lista_grupos[proximo_grupo(numero_grupo_atual)].include? i) # Se o grupo contrário ainda não teve esse vértice assinalado
-          lista_grupos[proximo_grupo(numero_grupo_atual)] << i
+        elsif (!list_of_groups[next_group(number_current_group)].include? i) # If the other group still hasn't this neighbour vertex
+          list_of_groups[next_group(number_current_group)] << i
         end
 
-        # Se esse vértice não foi analisado, iremos analisar ele após analisar o atual
-        if(!lista_analisados.include? i)
-          lista_vizinhos_nao_analisados << i
+        # If this vertex wasn't checked, we will check it after doing it in the current vertex
+        if(!list_vertices_checked.include? i)
+          list_of_neighbours_not_checked << i
         end
 
       end
     end
 
-    # Agora marcamos o atual como analisado
-    if(!lista_analisados.include? position)
-      lista_analisados << position
+    # Now we mark the current vertex as checked
+    if(!list_vertices_checked.include? vertex_position)
+      list_vertices_checked << vertex_position
     end
 
-    # Se todos os vizinhos foram analisados, não iremos analisar novamente, ou irá entrar em um loop infinito
-    if(lista_vizinhos_nao_analisados.count == 0)
-      return [true, lista_grupos]
+    # If all the neighbour vertex were checked, we won't check it again, so we can avoid a endless loop
+    if(list_of_neighbours_not_checked.count == 0)
+      return [true, list_of_groups]
     elsif
-      for i in (0..lista_vizinhos_nao_analisados.count - 1) # Agora iremos analisar todos os vértices vizinhos que ainda não foram analisados
-        retorno = check_vertice_group(lista_vizinhos_nao_analisados[i], lista_analisados, proximo_grupo(numero_grupo_atual), lista_grupos)
+      for i in (0..list_of_neighbours_not_checked.count - 1) # Now we will check all the neighbour vertices that weren't checked before
+        result = check_vertice_group(list_of_neighbours_not_checked[i], list_vertices_checked, next_group(number_current_group), list_of_groups)
 
-        if(retorno[0] == false) # Se alguém retornar falso, é porque encontrou uma aresta dentro do mesmo grupo
+        if(result[0] == false) # If someone returns false, it's because it found an edge linking vertices from the same group
           return [false, nil]
         end
 
-        eh_grupo = retorno[0]
-        lista_grupos = retorno[1] # Atualizamos as informações dos grupos para os próximos vértices a serem analisados
+        is_group = result[0]
+        list_of_groups = result[1] # We update the information about the groups so the next vertices can use it when they are being checked
 
       end
     end
 
-    return [eh_grupo, lista_grupos] # Retorno da análise atual
+    return [is_group, list_of_groups] # Return the result of the current analysis
 
   end
 
-  def proximo_grupo(numero_grupo_atual) # Se o vértice atual é do grupo A, o próximo é do grupo B, e vice-versa
-    numero_grupo_atual == 0 ? 1 : 0
+  def next_group(number_of_the_current_group) # If the current vertex is from the group A, the next group will be group B, and so on
+    number_of_the_current_group == 0 ? 1 : 0
   end
 
 

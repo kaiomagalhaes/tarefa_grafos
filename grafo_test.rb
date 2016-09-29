@@ -7,10 +7,10 @@ class GrafoTest < Minitest::Test
 
   # Tests with matrix 1
   MATRIX =[
-    [0, 2, 1, 1],
-    [2, 0, 1, 0],
-    [1, 1, 0, 1],
-    [1, 0, 1, 1]
+      [0, 2, 1, 1],
+      [2, 0, 1, 0],
+      [1, 1, 0, 1],
+      [1, 0, 1, 1]
   ]
   #  1 - order
 
@@ -65,10 +65,10 @@ class GrafoTest < Minitest::Test
   # 6 - complete
 
   MATRIX_COMPLETE =[
-    [0, 2, 1, 1],
-    [2, 0, 1, 1],
-    [1, 1, 0, 1],
-    [1, 0, 1, 0]
+      [0, 2, 1, 1],
+      [2, 0, 1, 1],
+      [1, 1, 0, 1],
+      [1, 0, 1, 0]
   ]
 
   def test_complete
@@ -77,12 +77,12 @@ class GrafoTest < Minitest::Test
 
   # 6 - cicle
   MATRIX_CICLE =[
-    [0, 2, 1, 1],
-    [2, 0, 1, 1],
-    [1, 1, 0, 1],
-    [1, 0, 1, 1]
+      [0, 2, 1, 1],
+      [2, 0, 1, 1],
+      [1, 1, 0, 1],
+      [1, 0, 1, 1]
   ]
-  
+
   MATRIX_PATH =[
       [0, 1, 0, 0],
       [1, 0, 1, 0],
@@ -102,15 +102,15 @@ class GrafoTest < Minitest::Test
   # 7 - Suponha que o grafo G é uma arvore, calcule o centro de G;
 
   MATRIX_GRAPH =
-  [
-      [0, 1, 0, 0, 0, 0, 0],
-      [1, 0, 1, 0, 0, 0, 0],
-      [0, 1, 0, 1, 0, 0, 0],
-      [0, 0, 1, 0, 1, 1, 0],
-      [0, 0, 0, 1, 0, 0, 0],
-      [0, 0, 0, 1, 0, 0, 1],
-      [0, 0, 0, 0, 0, 1, 0],
-  ]
+      [
+          [0, 1, 0, 0, 0, 0, 0],
+          [1, 0, 1, 0, 0, 0, 0],
+          [0, 1, 0, 1, 0, 0, 0],
+          [0, 0, 1, 0, 1, 1, 0],
+          [0, 0, 0, 1, 0, 0, 0],
+          [0, 0, 0, 1, 0, 0, 1],
+          [0, 0, 0, 0, 0, 1, 0],
+      ]
 
   #
   #     4
@@ -146,14 +146,14 @@ class GrafoTest < Minitest::Test
   # É bipartido? Sim.
 
   MATRIX_BIPARTITE_TRUE =
-  [
-      [0, 1, 0, 1, 0, 0],
-      [1, 0, 1, 0, 0, 0],
-      [0, 1, 0, 1, 1, 0],
-      [1, 0, 1, 0, 0, 0],
-      [0, 0, 1, 0, 0, 1],
-      [0, 0, 0, 0, 1, 0]
-  ]
+      [
+          [0, 1, 0, 1, 0, 0],
+          [1, 0, 1, 0, 0, 0],
+          [0, 1, 0, 1, 1, 0],
+          [1, 0, 1, 0, 0, 0],
+          [0, 0, 1, 0, 0, 1],
+          [0, 0, 0, 0, 1, 0]
+      ]
 
   #  1 - 2
   #  \  /
@@ -205,14 +205,14 @@ class GrafoTest < Minitest::Test
   # É uma árvore? Sim.
 
   MATRIX_TREE_TRUE =
-  [
-      [0, 0, 0, 1, 0, 0],
-      [0, 0, 0, 1, 0, 0],
-      [0, 0, 0, 1, 0, 0],
-      [1, 1, 1, 0, 1, 0],
-      [0, 0, 0, 1, 0, 1],
-      [0, 0, 0, 0, 1, 0],
-  ]
+      [
+          [0, 0, 0, 1, 0, 0],
+          [0, 0, 0, 1, 0, 0],
+          [0, 0, 0, 1, 0, 0],
+          [1, 1, 1, 0, 1, 0],
+          [0, 0, 0, 1, 0, 1],
+          [0, 0, 0, 0, 1, 0],
+      ]
 
   # 1  2   3
   # \  |  /
@@ -253,7 +253,7 @@ class GrafoTest < Minitest::Test
   def test_cicle
     assert_equal ["ciclo"], Grafo.new(MATRIX_CICLE).graph_class
   end
-  
+
   def test_path
     assert_equal ["caminho"], Grafo.new(MATRIX_PATH).graph_class
   end
